@@ -14,9 +14,9 @@ app.use(middlewareLogResponses);
 app.use("/app", middlewareIncServerHits, express.static("./src/app"));
 
 // routes
-app.get("/healthz", handlerReadiness);
-app.get("/metrics", handlerHits);
-app.get("/reset", handlerReset);
+app.get("/api/healthz", handlerReadiness);
+app.get("/admin/metrics", handlerHits);
+app.post("/admin/reset", handlerReset);
 
 app.listen(PORT, () => {
   console.log(`Server is running at localhost:${PORT}`);
