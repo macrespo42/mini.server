@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
+import { BadRequestError } from "../middlewares/errorHandler.js";
 
 function censorBadWord(text: string, badWords: string[]) {
   const words = text.split(" ");
@@ -24,7 +25,7 @@ export async function handlerValidateChirp(
     res.set("Content-Type", "application/json");
 
     if (params.body.length > 140) {
-      throw new Error("Chirp is too long");
+      throw new BadRequestError("Chirp is too long. Max length is 140");
     } else {
       res.status(200).send(
         JSON.stringify({
