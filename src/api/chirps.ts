@@ -1,4 +1,4 @@
-import type { NextFunction, Request, Response } from "express";
+import type { Request, Response } from "express";
 import { BadRequestError } from "../middlewares/errorHandler.js";
 import { createChirp } from "../lib/db/queries/chirps.js";
 
