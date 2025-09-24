@@ -8,6 +8,13 @@
       "when": 1758722534544,
       "tag": "0000_exotic_stark_industries",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1758729988055,
+      "tag": "0001_soft_forge",
+      "breakpoints": true
     }
   ]
 }

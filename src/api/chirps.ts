@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { BadRequestError } from "../middlewares/errorHandler.js";
+import { createChirp } from "../lib/db/queries/chirps.js";
 
 function censorBadWord(text: string, badWords: string[]) {
   const words = text.split(" ");
@@ -11,33 +12,27 @@ function censorBadWord(text: string, badWords: string[]) {
   return words.join(" ");
 }
 
-export async function handlerValidateChirp(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  type Parameter = {
+export async function handlerCreateChirp(req: Request, res: Response) {
+  type Params = {
     body: string;
+    userId: string;
   };
 
-  try {
-    const params: Parameter = req.body;
-    res.set("Content-Type", "application/json");
-
-    if (params.body.length > 140) {
-      throw new BadRequestError("Chirp is too long. Max length is 140");
-    } else {
-      res.status(200).send(
-        JSON.stringify({
-          cleanedBody: censorBadWord(params.body, [
-            "kerfuffle",
-            "sharbert",
-            "fornax",
-          ]),
-        }),
-      );
-    }
-  } catch (error) {
-    next(error);
+  const params: Params = req.body;
+  if (params.body.length > 140) {
+    throw new BadRequestError("Chirp is too long. Max length is 140");
   }
+
+  const cleanedBody = censorBadWord(params.body, [
+    "kerfuffle",
+    "sharbert",
+    "fornax",
+  ]);
+
+  const chirp = await createChirp({
+    body: cleanedBody,
+    userId: params.userId,
+  });
+
+  res.status(201).json(chirp);
 }
