@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 
 function censorBadWord(text: string, badWords: string[]) {
   const words = text.split(" ");
@@ -10,7 +10,11 @@ function censorBadWord(text: string, badWords: string[]) {
   return words.join(" ");
 }
 
-export async function handlerValidateChirp(req: Request, res: Response) {
+export async function handlerValidateChirp(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   type Parameter = {
     body: string;
   };
@@ -20,11 +24,7 @@ export async function handlerValidateChirp(req: Request, res: Response) {
     res.set("Content-Type", "application/json");
 
     if (params.body.length > 140) {
-      res.status(400).send(
-        JSON.stringify({
-          error: "Chirp is too long",
-        }),
-      );
+      throw new Error("Chirp is too long");
     } else {
       res.status(200).send(
         JSON.stringify({
@@ -37,6 +37,6 @@ export async function handlerValidateChirp(req: Request, res: Response) {
       );
     }
   } catch (error) {
-    res.status(400).send("Invalid JSON");
+    next(error);
   }
 }
