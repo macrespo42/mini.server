@@ -1,10 +1,16 @@
 import type { MigrationConfig } from "drizzle-orm/migrator";
+import process from "node:process";
 
 process.loadEnvFile();
 
 const DB_URL = process.env.DB_URL;
 if (!DB_URL) {
   throw new Error("DB_URL is undefined");
+}
+
+const PLATFORM = process.env.PLATFORM;
+if (!PLATFORM) {
+  throw new Error("PLATFORM is undefined");
 }
 
 const migrationConfig: MigrationConfig = {
@@ -17,6 +23,7 @@ type APIConfig = {
     url: string;
     migrationConfig: MigrationConfig;
   };
+  platform: string;
 };
 
 export const config: APIConfig = {
@@ -25,4 +32,5 @@ export const config: APIConfig = {
     url: DB_URL,
     migrationConfig,
   },
+  platform: PLATFORM,
 };

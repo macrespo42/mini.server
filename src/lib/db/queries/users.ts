@@ -9,3 +9,7 @@ export async function createUser(user: User) {
     .returning();
   return result;
 }
+
+export async function deleteAllUsers() {
+  await db.delete(users);
+}
