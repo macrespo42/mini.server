@@ -4,7 +4,11 @@ import { middlewareLogResponses } from "./middlewares/logResponses.js";
 import { middlewareIncServerHits } from "./middlewares/incServerHits.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { handlerHits, handlerReset } from "./api/hits.js";
-import { handlerCreateChirp } from "./api/chirps.js";
+import {
+  handleGetChirp,
+  handlerCreateChirp,
+  handlerGetAllChirps,
+} from "./api/chirps.js";
 import { config } from "./config.js";
 
 import postgres from "postgres";
@@ -29,6 +33,8 @@ app.use("/app", middlewareIncServerHits, express.static("./src/app"));
 app.get("/api/healthz", handlerReadiness);
 app.post("/api/users", handlerCreateUser);
 app.post("/api/chirps", handlerCreateChirp);
+app.get("/api/chirps", handlerGetAllChirps);
+app.get("/api/chirps/:id", handleGetChirp);
 
 app.get("/admin/metrics", handlerHits);
 app.post("/admin/reset", handlerReset);

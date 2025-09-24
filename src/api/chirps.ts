@@ -1,6 +1,10 @@
 import type { Request, Response } from "express";
-import { BadRequestError } from "../middlewares/errorHandler.js";
-import { createChirp } from "../lib/db/queries/chirps.js";
+import { BadRequestError, NotFoundError } from "../middlewares/errorHandler.js";
+import {
+  createChirp,
+  getAllChirps,
+  getChirp,
+} from "../lib/db/queries/chirps.js";
 
 function censorBadWord(text: string, badWords: string[]) {
   const words = text.split(" ");
@@ -35,4 +39,22 @@ export async function handlerCreateChirp(req: Request, res: Response) {
   });
 
   res.status(201).json(chirp);
+}
+
+export async function handlerGetAllChirps(_: Request, res: Response) {
+  const chirps = await getAllChirps();
+  res.status(200).json(chirps);
+}
+
+export async function handleGetChirp(req: Request, res: Response) {
+  const id = req.params.id;
+
+  if (typeof id !== "string") {
+    throw new NotFoundError("Chirp Not Found");
+  }
+  const chirp = await getChirp(id);
+  // if (!chirp) {
+  //   throw new NotFoundError("Chirp Not Found");
+  // }
+  res.status(200).json(chirp);
 }
