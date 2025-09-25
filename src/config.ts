@@ -13,6 +13,11 @@ if (!PLATFORM) {
   throw new Error("PLATFORM is undefined");
 }
 
+const SECRET = process.env.SECRET;
+if (!SECRET) {
+  throw new Error("SECRET is undefined");
+}
+
 const migrationConfig: MigrationConfig = {
   migrationsFolder: "src/lib/db/",
 };
@@ -24,6 +29,7 @@ type APIConfig = {
     migrationConfig: MigrationConfig;
   };
   platform: string;
+  secret: string;
 };
 
 export const config: APIConfig = {
@@ -33,4 +39,5 @@ export const config: APIConfig = {
     migrationConfig,
   },
   platform: PLATFORM,
+  secret: SECRET,
 };

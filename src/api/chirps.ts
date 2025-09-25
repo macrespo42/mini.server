@@ -5,6 +5,8 @@ import {
   getAllChirps,
   getChirp,
 } from "../lib/db/queries/chirps.js";
+import { getBearerToken, validateJWT } from "../auth.js";
+import { config } from "../config.js";
 
 function censorBadWord(text: string, badWords: string[]) {
   const words = text.split(" ");
@@ -33,9 +35,16 @@ export async function handlerCreateChirp(req: Request, res: Response) {
     "fornax",
   ]);
 
+  const token = getBearerToken(req);
+  const userId = validateJWT(token, config.secret);
+
+  if (!userId) {
+    throw new Error("Invalid jwt");
+  }
+
   const chirp = await createChirp({
     body: cleanedBody,
-    userId: params.userId,
+    userId: userId,
   });
 
   res.status(201).json(chirp);
@@ -53,8 +62,5 @@ export async function handleGetChirp(req: Request, res: Response) {
     throw new NotFoundError("Chirp Not Found");
   }
   const chirp = await getChirp(id);
-  // if (!chirp) {
-  //   throw new NotFoundError("Chirp Not Found");
-  // }
   res.status(200).json(chirp);
 }

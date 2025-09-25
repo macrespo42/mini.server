@@ -15,6 +15,13 @@
       "when": 1758729988055,
       "tag": "0001_soft_forge",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1758742256519,
+      "tag": "0002_hesitant_proudstar",
+      "breakpoints": true
     }
   ]
 }
