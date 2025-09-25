@@ -1,0 +1,1 @@
+ALTER TABLE "refresh_tokens" ALTER COLUMN "expired_at" SET DEFAULT now() + interval '60 days';

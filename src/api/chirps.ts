@@ -21,10 +21,10 @@ function censorBadWord(text: string, badWords: string[]) {
 export async function handlerCreateChirp(req: Request, res: Response) {
   type Params = {
     body: string;
-    userId: string;
   };
 
   const params: Params = req.body;
+
   if (params.body.length > 140) {
     throw new BadRequestError("Chirp is too long. Max length is 140");
   }
@@ -36,6 +36,7 @@ export async function handlerCreateChirp(req: Request, res: Response) {
   ]);
 
   const token = getBearerToken(req);
+  console.log(`TOKEN: ${token}`);
   const userId = validateJWT(token, config.secret);
 
   if (!userId) {

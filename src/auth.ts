@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import type { Request } from "express";
+import crypto from "node:crypto";
+import { UnauthorizedError } from "./middlewares/errorHandler.js";
 
 const TOKEN_ISSUER = "chirpy";
 type Payload = Pick<jwt.JwtPayload, "iss" | "sub" | "iat" | "exp">;
@@ -34,7 +36,7 @@ export function validateJWT(tokenString: string, secret: string): string {
   try {
     decoded = jwt.verify(tokenString, secret) as JwtPayload;
   } catch (error) {
-    throw new Error("Invalid token");
+    throw new UnauthorizedError("Invalid token");
   }
 
   if (decoded.iss !== TOKEN_ISSUER) {
@@ -56,4 +58,9 @@ export function getBearerToken(req: Request): string {
 
   const [_, tokenString] = bearer.split(" ");
   return tokenString;
+}
+
+export function makeRefreshToken() {
+  const rawToken = crypto.randomBytes(32);
+  return rawToken.toString("hex");
 }

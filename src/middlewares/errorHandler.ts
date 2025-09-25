@@ -41,7 +41,7 @@ export function errorHandler(
     res.status(404).json({ error: err.message ?? "Not Found" });
   } else {
     res.status(500).json({
-      error: "Internal Server Error",
+      error: err.message ?? "Internal Server Error",
     });
   }
 }
