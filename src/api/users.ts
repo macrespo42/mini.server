@@ -1,11 +1,16 @@
 import type { Request, Response, NextFunction } from "express";
-import { createUser, getUserByEmail } from "../lib/db/queries/users.js";
+import {
+  createUser,
+  getUserByEmail,
+  updateUserInfos,
+} from "../lib/db/queries/users.js";
 import {
   checkPasswordHash,
   getBearerToken,
   hashPassword,
   makeJWT,
   makeRefreshToken,
+  validateJWT,
 } from "../auth.js";
 import type { User } from "../lib/db/schema.js";
 import { UnauthorizedError } from "../middlewares/errorHandler.js";
@@ -86,4 +91,31 @@ export async function handlerRevoke(req: Request, res: Response) {
   const token = getBearerToken(req);
   await revokeRefreshToken(token);
   res.status(204).send();
+}
+
+export async function hanlderUpdateUsers(req: Request, res: Response) {
+  type Params = {
+    email: string;
+    password: string;
+  };
+
+  try {
+    const token = getBearerToken(req);
+    const userId = validateJWT(token, config.secret);
+    if (!userId) {
+      throw new UnauthorizedError("Unauthorized");
+    }
+
+    const params: Params = req.body;
+
+    const hashedPassord = await hashPassword(params.password);
+    const user: UserSecure = await updateUserInfos(
+      userId,
+      params.email,
+      hashedPassord,
+    );
+    res.status(200).json(user);
+  } catch (err) {
+    throw new UnauthorizedError("Unauthorized");
+  }
 }

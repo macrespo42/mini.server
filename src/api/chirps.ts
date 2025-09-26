@@ -36,7 +36,6 @@ export async function handlerCreateChirp(req: Request, res: Response) {
   ]);
 
   const token = getBearerToken(req);
-  console.log(`TOKEN: ${token}`);
   const userId = validateJWT(token, config.secret);
 
   if (!userId) {

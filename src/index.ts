@@ -19,6 +19,7 @@ import {
   handlerLogin,
   handlerRefresh,
   handlerRevoke,
+  hanlderUpdateUsers,
 } from "./api/users.js";
 
 const migrationClient = postgres(config.db.url, { max: 1 });
@@ -37,6 +38,7 @@ app.use("/app", middlewareIncServerHits, express.static("./src/app"));
 // routes
 app.get("/api/healthz", handlerReadiness);
 app.post("/api/users", handlerCreateUser);
+app.put("/api/users", hanlderUpdateUsers);
 app.post("/api/chirps", handlerCreateChirp);
 app.get("/api/chirps", handlerGetAllChirps);
 app.get("/api/chirps/:id", handleGetChirp);
