@@ -3,7 +3,6 @@ import {
   BadRequestError,
   ForbiddenError,
   NotFoundError,
-  UnauthorizedError,
 } from "../middlewares/errorHandler.js";
 import {
   createChirp,
@@ -56,8 +55,33 @@ export async function handlerCreateChirp(req: Request, res: Response) {
   res.status(201).json(chirp);
 }
 
-export async function handlerGetAllChirps(_: Request, res: Response) {
-  const chirps = await getAllChirps();
+export async function handlerGetAllChirps(req: Request, res: Response) {
+  let authorId = "";
+  let authorIdQuery = req.query.authorId;
+
+  if (typeof authorIdQuery === "string") {
+    authorId = authorIdQuery;
+  }
+
+  let sort = "";
+  let sortQuery = req.query.sort;
+
+  if (typeof sortQuery === "string") {
+    sort = sortQuery;
+  }
+
+  const chirps = await getAllChirps(authorId);
+  if (sort === "desc") {
+    chirps.sort((a, b) => {
+      if (a.createdAt > b.createdAt) {
+        return -1;
+      } else if (a.createdAt < b.createdAt) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+  }
   res.status(200).json(chirps);
 }
 
