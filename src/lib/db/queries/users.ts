@@ -34,3 +34,12 @@ export async function updateUserInfos(
   const { password, ...userWithoutPassword } = user;
   return userWithoutPassword;
 }
+
+export async function upgradeToRed(id: string) {
+  const redUsers = await db
+    .update(users)
+    .set({ isChirpyRed: true })
+    .where(eq(users.id, id))
+    .returning();
+  return redUsers.length > 0;
+}

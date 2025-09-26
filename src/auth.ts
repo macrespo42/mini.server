@@ -60,6 +60,16 @@ export function getBearerToken(req: Request): string {
   return tokenString;
 }
 
+export function getAPIKey(req: Request): string {
+  const apiKey = req.get("Authorization");
+  if (!apiKey) {
+    throw new UnauthorizedError("No apiKey provided");
+  }
+
+  const [_, key] = apiKey.split(" ");
+  return key;
+}
+
 export function makeRefreshToken() {
   const rawToken = crypto.randomBytes(32);
   return rawToken.toString("hex");

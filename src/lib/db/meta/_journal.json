@@ -71,6 +71,13 @@
       "when": 1758814652978,
       "tag": "0009_normal_microbe",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1758882180446,
+      "tag": "0010_lethal_chronomancer",
+      "breakpoints": true
     }
   ]
 }

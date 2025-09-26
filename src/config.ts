@@ -18,6 +18,11 @@ if (!SECRET) {
   throw new Error("SECRET is undefined");
 }
 
+const POLKA_KEY = process.env.POLKA_KEY;
+if (!POLKA_KEY) {
+  throw new Error("POLKA_KEY is undefined");
+}
+
 const migrationConfig: MigrationConfig = {
   migrationsFolder: "src/lib/db/",
 };
@@ -30,6 +35,7 @@ type APIConfig = {
   };
   platform: string;
   secret: string;
+  polkaKey: string;
 };
 
 export const config: APIConfig = {
@@ -40,4 +46,5 @@ export const config: APIConfig = {
   },
   platform: PLATFORM,
   secret: SECRET,
+  polkaKey: POLKA_KEY,
 };
