@@ -7,6 +7,7 @@ import { handlerHits, handlerReset } from "./api/hits.js";
 import {
   handleGetChirp,
   handlerCreateChirp,
+  handlerDeleteChirp,
   handlerGetAllChirps,
 } from "./api/chirps.js";
 import { config } from "./config.js";
@@ -42,6 +43,7 @@ app.put("/api/users", hanlderUpdateUsers);
 app.post("/api/chirps", handlerCreateChirp);
 app.get("/api/chirps", handlerGetAllChirps);
 app.get("/api/chirps/:id", handleGetChirp);
+app.delete("/api/chirps/:chirpId", handlerDeleteChirp);
 app.post("/api/login", handlerLogin);
 app.post("/api/refresh", handlerRefresh);
 app.post("/api/revoke", handlerRevoke);

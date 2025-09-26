@@ -1,7 +1,13 @@
 import type { Request, Response } from "express";
-import { BadRequestError, NotFoundError } from "../middlewares/errorHandler.js";
+import {
+  BadRequestError,
+  ForbiddenError,
+  NotFoundError,
+  UnauthorizedError,
+} from "../middlewares/errorHandler.js";
 import {
   createChirp,
+  deleteChirp,
   getAllChirps,
   getChirp,
 } from "../lib/db/queries/chirps.js";
@@ -62,5 +68,32 @@ export async function handleGetChirp(req: Request, res: Response) {
     throw new NotFoundError("Chirp Not Found");
   }
   const chirp = await getChirp(id);
+  if (!chirp) {
+    throw new NotFoundError("Not Found");
+  }
   res.status(200).json(chirp);
+}
+
+export async function handlerDeleteChirp(req: Request, res: Response) {
+  const chirpId = req.params.chirpId;
+
+  try {
+    const token = getBearerToken(req);
+    const userId = validateJWT(token, config.secret);
+
+    const chirp = await getChirp(chirpId);
+    console.log(`CHIRP: ${JSON.stringify(chirp)}`);
+    if (chirp.userId !== userId) {
+      throw new ForbiddenError("Unauthorized");
+    }
+
+    const deleted = await deleteChirp(chirpId);
+    if (!deleted) {
+      throw new NotFoundError("Not Found");
+    } else {
+      res.status(204).send("Deleted");
+    }
+  } catch (err) {
+    throw err;
+  }
 }
